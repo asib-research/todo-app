@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/controller.dart';
 import 'package:todo_app/ui/entities/todo.dart';
+import 'package:intl/intl.dart';
 
-class BuildTodoCard extends StatelessWidget {
-  const BuildTodoCard({
+class BuildTodoCardWidget extends StatelessWidget {
+  const BuildTodoCardWidget({
     super.key,
     required this.todo,
-    required this.onCardIconPressed
+    required this.onCardIconPressed,
   });
 
   final Todo todo;
@@ -14,23 +16,31 @@ class BuildTodoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      surfaceTintColor: _buildCardTintColor(todo.isDone),
-      color: _buildCardBGColor(todo.isDone),
+      surfaceTintColor: buildCardTintColor(todo.isDone),
+      color: buildCardBGColor(todo.isDone),
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       elevation: 4,
       child: ListTile(
         title: Text(
           todo.title,
           style: TextStyle(
-              decoration: _buildTodoTtileTextDecoration(todo.isDone),
+              decoration: buildTodoTtileTextDecoration(todo.isDone),
+              decorationThickness: 3,
               fontSize: 16,
-              fontWeight: FontWeight.w600),
+              fontWeight: FontWeight.w600,
+              color: buildTextColor(todo.isDone)),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(todo.description),
-            Text(todo.time.toString()),
+            Text(
+              todo.description,
+              style: TextStyle(color: buildTextColor(todo.isDone)),
+            ),
+            Text(
+              DateFormat.yMEd().add_jms().format(todo.time),
+              style: TextStyle(color: buildTextColor(todo.isDone)),
+            ),
           ],
         ),
         trailing: _buildTodoTrailing(todo.isDone),
@@ -43,26 +53,9 @@ class BuildTodoCard extends StatelessWidget {
       onTap: onCardIconPressed,
       child: CircleAvatar(
         child: Icon(
-          _buildTodoIcon(isDone),
+          buildTodoIcon(isDone),
         ),
       ),
     );
   }
-
-  IconData? _buildTodoIcon(bool isDone) {
-    return isDone ? Icons.clear:Icons.check;
-  }
-
-  TextDecoration? _buildTodoTtileTextDecoration(bool isDone) {
-    return isDone ? TextDecoration.lineThrough: null;
-  }
-
-  Color? _buildCardTintColor(bool isDone){
-    return isDone?Colors.deepOrangeAccent:null;
-  }
-
-  Color? _buildCardBGColor(bool isDone){
-    return isDone?Colors.deepOrangeAccent.shade100:null;
-  }
-
 }

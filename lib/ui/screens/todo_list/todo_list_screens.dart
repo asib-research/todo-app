@@ -13,7 +13,6 @@ class TodoListScreen extends StatefulWidget {
 }
 
 class _TodoListScreenState extends State<TodoListScreen> {
-
   List<Todo> _todoList = [];
 
   @override
@@ -24,15 +23,33 @@ class _TodoListScreenState extends State<TodoListScreen> {
         appBar: AppBar(
           title: const Text("Todo List"),
           bottom: const TabBar(tabs: [
-            Tab(text: 'All',),
-            Tab(text: 'Undone',),
-            Tab(text: 'Done',),
+            Tab(
+              text: 'All',
+            ),
+            Tab(
+              text: 'Undone',
+            ),
+            Tab(
+              text: 'Done',
+            ),
           ]),
         ),
-        body: const TabBarView(children: [
-          AllTodoListScreen(),
-          UndoneTodoListScreen(),
-          DoneTodoListScreen(),
+        body: TabBarView(children: [
+          AllTodoListScreen(
+            onDelete: _deleteTodo,
+            onStatucChange: _togoleStatus,
+            todoList: _todoList,
+          ),
+          UndoneTodoListScreen(
+            onDelete: _deleteTodo,
+            onStatucChange: _togoleStatus,
+            todoList: _todoList.where((item) => item.isDone == false).toList(),
+          ),
+          DoneTodoListScreen(
+            onDelete: _deleteTodo,
+            onStatucChange: _togoleStatus,
+            todoList: _todoList.where((item) => item.isDone == true).toList(),
+          ),
         ]),
         floatingActionButton: _buildFloatingActionButton(),
       ),
@@ -43,8 +60,14 @@ class _TodoListScreenState extends State<TodoListScreen> {
     return FloatingActionButton.extended(
       tooltip: "Add new todo.",
       onPressed: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const AddNewTodoScreen()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AddNewTodoScreen(
+              onAddTodo: _addNewTodo,
+            ),
+          ),
+        );
       },
       icon: const Icon(
         Icons.add,
@@ -52,5 +75,26 @@ class _TodoListScreenState extends State<TodoListScreen> {
       ),
       label: const Text("Add"),
     );
+  }
+
+  void _addNewTodo(Todo todo) {
+    _todoList.add(todo);
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  void _deleteTodo(int index) {
+    _todoList.removeAt(index);
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  void _togoleStatus(int index) {
+    _todoList[index].isDone = !_todoList[index].isDone;
+    if (mounted) {
+      setState(() {});
+    }
   }
 }

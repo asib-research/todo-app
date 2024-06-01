@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/ui/entities/todo.dart';
 
 class AddNewTodoScreen extends StatefulWidget {
-  const AddNewTodoScreen({super.key});
+ const AddNewTodoScreen({super.key, required this.onAddTodo});
+
+  final Function(Todo) onAddTodo;
 
   @override
   State<AddNewTodoScreen> createState() => _AddNewTodoScreenState();
 }
 
 class _AddNewTodoScreenState extends State<AddNewTodoScreen> {
-
   final TextEditingController _titleTEController = TextEditingController();
-  final TextEditingController _descriptionTEController = TextEditingController();
+  final TextEditingController _descriptionTEController =
+      TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -20,62 +23,65 @@ class _AddNewTodoScreenState extends State<AddNewTodoScreen> {
         title: const Text("Add New Todo"),
       ),
       body: Padding(
-        padding:const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
-
               TextFormField(
                 controller: _titleTEController,
                 keyboardType: TextInputType.text,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 decoration: const InputDecoration(
-                  hintText:  'Title',
-                  labelText: 'Title'
-                ),
-                validator: (String? value){
-                  if(value!.trim().isEmpty??true){
+                    hintText: 'Title', labelText: 'Title'),
+                validator: (String? value) {
+                  if (value!.trim().isEmpty ?? true) {
                     return 'Title can\' be empty';
                   }
                   return null;
                 },
               ),
-
-             const SizedBox(height: 16,),
-
+              const SizedBox(
+                height: 16,
+              ),
               TextFormField(
                 controller: _descriptionTEController,
                 keyboardType: TextInputType.text,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 maxLength: 200,
                 decoration: const InputDecoration(
-                    hintText: 'Description',
-                    labelText: 'Description'
-                ),
-                validator: (String? value){
-                  if(value!.trim().isEmpty??true){
+                    hintText: 'Description', labelText: 'Description'),
+                validator: (String? value) {
+                  if (value!.trim().isEmpty ?? true) {
                     return 'Description can\' be empty';
                   }
                   return null;
                 },
               ),
-
-             const SizedBox(height: 20,),
-
-              ElevatedButton(onPressed: (){
-                if(_formKey.currentState!.validate()){
-                  Navigator.pop(context);
-                }
-              }, child: const Text("Add"))
-
-
+              const SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      widget.onAddTodo(
+                        Todo(
+                          _titleTEController.text.trim(),
+                          _descriptionTEController.text.trim(),
+                          DateTime.now(),
+                        ),
+                      );
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: const Text("Add"))
             ],
           ),
         ),
       ),
     );
   }
+
   @override
   void dispose() {
     _titleTEController.dispose();

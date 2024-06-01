@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 ThemeData buildLightThemeData() {
   return ThemeData(
+    scaffoldBackgroundColor: Colors.orange.shade50,
     brightness: Brightness.light,
     appBarTheme: _buildAppBarTheme(),
     elevatedButtonTheme: _buildElevatedButtonThemeData(),
@@ -14,6 +15,7 @@ ThemeData buildLightThemeData() {
 
 ThemeData buildDarkThemeData() {
   return ThemeData(
+    scaffoldBackgroundColor: Colors.orange.shade50,
     brightness: Brightness.dark,
     appBarTheme: _buildAppBarTheme(),
     elevatedButtonTheme: _buildElevatedButtonThemeData(),
