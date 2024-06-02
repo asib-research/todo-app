@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/controller.dart';
+import 'package:todo_app/todo_functions.dart';
 import 'package:todo_app/ui/entities/todo.dart';
 import 'package:intl/intl.dart';
 
